@@ -12,7 +12,7 @@ from tqdm import tqdm
 print('carregando')
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-pdf_path = os.path.join(BASE_DIR, "./pdf/fisica1.pdf")
+pdf_path = os.path.join(BASE_DIR, "./pdf/teste.pdf")
 
 loader = PyPDFLoader(pdf_path)
 

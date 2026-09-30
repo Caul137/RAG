@@ -1,71 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=
-    , initial-scale=1.0">
-    <title>RAG</title>
-</head>
-<body>
-    <script>
-        async function sendMessage() {
-            const inputField = document.getElementById('user-input');
-            const question = inputField.value.trim();
+<!doctype html>
 
-            if (!question) return;
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./assets/style.css" />
+    <title>RAG AI</title>
+  </head>
 
-            // Exibe a mensagem do usuário no chat
-            appendMessage(question, 'user-message');
-            inputField.value = '';
+  <body>
+    <div class="chat-container">
 
-            // Mensagem temporária de "carregando"
-            const loadingId = appendMessage('Pensando...', 'bot-message loading');
+      <header class="chat-header">
+        <div class="logo">AI</div>
 
-            try {
-                // Chamada à API da LangServe (/invoke)
-                const response = await fetch('http://localhost:8000/invoke', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        input: question
-                    })
-                });
+        <div class="header-info">
+          <h1>RAG Assistant</h1>
+          <span>Ollama · FastAPI · LangChain</span>
+        </div>
 
-                const data = await response.json();
+        <div class="status">
+          <div class="status-dot"></div>
+          Online
+        </div>
+      </header>
 
-                // Remove mensagem de carregamento e exibe a resposta da IA
-                document.getElementById(loadingId).remove();
-                appendMessage(data.output, 'bot-message');
+      <!-- CHAT -->
 
-            } catch (error) {
-                console.error('Erro na requisição:', error);
-                document.getElementById(loadingId).remove();
-                appendMessage('Erro ao obter resposta do servidor.', 'bot-message');
-            }
-        }
+      <main id="chat-messages">
+        <div class="message bot-message">
+          Olá! 👋<br />
+          Faça uma pergunta sobre os documentos disponíveis no meu conhecimento.
+        </div>
+      </main>
 
-        function appendMessage(text, className) {
-            const messagesContainer = document.getElementById('chat-messages');
-            const messageDiv = document.createElement('div');
-            const messageId = 'msg-' + Date.now();
-            
-            messageDiv.id = messageId;
-            messageDiv.className = `message ${className}`;
-            messageDiv.innerText = text;
+      <!-- INPUT -->
 
-            messagesContainer.appendChild(messageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      <footer class="input-area">
+        <div class="input-container">
+          <input
+            id="user-input"
+            type="text"
+            placeholder="Digite sua pergunta..."
+            autocomplete="off"
+            onkeypress="handleKeyPress(event)"
+          />
 
-            return messageId;
-        }
+          <button id="send-button" onclick="sendMessage()">➤</button>
+        </div>
 
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        }
-    </script>
-</body>
+        <div class="input-footer">Respostas geradas pelo seu RAG local</div>
+      </footer>
+    </div>
+
+    <script src="/assets/main.js"></script>
+    
+  </body>
 </html>
